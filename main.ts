@@ -15,7 +15,7 @@ function createJsonErrorResponse(message: string, statusCode = 500) {
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // =======================================================
-// 模块 1: OpenRouter API 调用逻辑 (用于 nano banana)
+// 模块 1: XI-AI API 调用逻辑 (用于 nano banana)
 // =======================================================
 async function callOpenRouter(messages: any[], apiKey: string): Promise<{ type: 'image' | 'text'; content: string }> {
     if (!apiKey) { throw new Error("callOpenRouter received an empty apiKey."); }
