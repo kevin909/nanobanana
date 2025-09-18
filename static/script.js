@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modelCards = document.querySelectorAll('.model-card');
     const nanobananaControls = document.getElementById('nanobanana-controls');
     const modelscopeControls = document.getElementById('modelscope-controls');
-    const apiKeyXIInput = document.getElementById('api-key-input-openrouter');
+    const apiKeyXIInput = document.getElementById('api-key-input-xi');
     const apiKeyModelScopeInput = document.getElementById('api-key-input-modelscope');
     const generateBtns = document.querySelectorAll('.generate-btn');
 
