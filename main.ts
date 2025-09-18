@@ -31,7 +31,16 @@ async function callXiAI(messages: any[], apiKey: string): Promise<{ type: 'image
     }
     const responseData = await apiResponse.json();
     console.log("XI-AI Response:", JSON.stringify(responseData, null, 2));
+    
+    // 调试：查看message.content的具体格式
     const message = responseData.choices?.[0]?.message;
+    if (message) {
+        console.log('Message content type:', typeof message.content);
+        if (typeof message.content === 'string') {
+            console.log('Message content prefix:', message.content.substring(0, 100));
+        }
+    }
+    
     if (message?.images?.[0]?.image_url?.url) { return { type: 'image', content: message.images[0].image_url.url }; }
     if (typeof message?.content === 'string' && message.content.startsWith('data:image/')) { return { type: 'image', content: message.content }; }
     if (typeof message?.content === 'string' && message.content.trim() !== '') { return { type: 'text', content: message.content }; }

@@ -298,6 +298,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         const response = await fetch('/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
         const data = await response.json();
         if (!response.ok || data.error) { throw new Error(data.error || `服务器错误: ${response.status}`); }
+        
+        // 调试：查看返回的图片数据格式
+        console.log('返回的图片数据:', data.imageUrl);
+        console.log('数据类型:', typeof data.imageUrl);
+        if (typeof data.imageUrl === 'string') {
+            console.log('数据前缀:', data.imageUrl.substring(0, 50));
+        }
+        
         return [data.imageUrl];
     }
 
