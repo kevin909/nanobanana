@@ -24,7 +24,7 @@
     *   **动态进度更新**: 在生成多张图片时，获得实时反馈（例如：“正在生成 2/4 张图片...”）。
     *   **全屏预览**: 点击任何一张生成的图片，即可在弹窗中进行全屏预览。
 *   **智能 API Key 处理**:
-    *   在部署时将 `OPENROUTER_API_KEYS` 和 `MODELSCOPE_API_KEY` 设置为环境变量，前端将自动隐藏密钥输入框，打造一个清爽、可供分享的界面。
+    *   在部署时将 `XI_TOKEN` 和 `MODELSCOPE_API_KEY` 设置为环境变量，前端将自动隐藏密钥输入框，打造一个清爽、可供分享的界面。
     *   如果未设置环境变量，也支持在UI中直接输入。
     *   环境变量支持多个API密钥（用逗号分隔），以实现随机、无状态的负载均衡。
 
@@ -41,11 +41,11 @@
 4.  **(推荐) 添加环境变量**:
     *   进入项目的 "Settings" -> "Environment Variables"。
     *   添加 `MODELSCOPE_API_KEY`，值为您的 ModelScope 密钥（用于 Qwen, Flux 等）。
-    *   添加 `OPENROUTER_API_KEYS`，值为您的 OpenRouter 密钥（用于 Nano Banana）。
+    *   添加 `XI_TOKEN`，值为您的 XI-AI Token（用于 Nano Banana）。
     *   *提示: 您可以添加多个由逗号分隔的密钥 (例如 `key1,key2,key3`) 来实现负载均衡。*
     *   **没有密钥？**
         *   [如何注册 ModelScope API 密钥](https://x230rpqk6u.feishu.cn/wiki/AJxKwmleQiUovZkZZOJc4mp4n5g)
-        *   [如何注册 OpenRouter API 密钥](https://x230rpqk6u.feishu.cn/wiki/FptCw2H1ViN7QwkhT16cMTDPnCe)
+        *   [如何获取 XI Token](https://x230rpqk6u.feishu.cn/wiki/FptCw2H1ViN7QwkhT16cMTDPnCe)
 5.  **部署**: 点击 "Link" 或 "Deploy" 按钮，您的 AI 图片生成中心就上线了！
 
 ---
@@ -72,7 +72,7 @@
 -   **后端**: Deno, Deno Standard Library
 -   **AI 模型**:
     *   [魔搭 (ModelScope)](https://modelscope.cn/): `Qwen/Qwen-Image`, `MusePublic/FLUX.1` 等
-    *   [OpenRouter](https://openrouter.ai/): `google/gemini-2.5-flash-image-preview` (用于 Nano Banana)
+    *   [XI-AI](https://api.xi-ai.cn/): `google/gemini-2.5-flash-image-preview` (用于 Nano Banana)
 
 ---
 

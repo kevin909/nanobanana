@@ -24,7 +24,7 @@ Built with a robust Deno backend, it offers a seamless and professional-grade cr
     *   **Dynamic Progress Updates**: Get real-time feedback when generating multiple images (e.g., "Generating 2/4...").
     *   **Fullscreen Preview**: Click on any generated image to view it in a fullscreen modal.
 *   **Smart API Key Handling**:
-    *   Set `OPENROUTER_API_KEYS` and `MODELSCOPE_API_KEY` as environment variables during deployment to hide the input fields for a clean, shareable interface.
+    *   Set `XI_TOKEN` and `MODELSCOPE_API_KEY` as environment variables during deployment to hide the input fields for a clean, shareable interface.
     *   Supports entering keys directly in the UI if environment variables are not set.
     *   Supports multiple, comma-separated API keys in environment variables for random, stateless load balancing.
 
@@ -41,11 +41,11 @@ Built with a robust Deno backend, it offers a seamless and professional-grade cr
 4.  **(Recommended) Add Environment Variables**:
     *   Go to your project's "Settings" -> "Environment Variables".
     *   Add `MODELSCOPE_API_KEY` with your key for Qwen, Flux, etc.
-    *   Add `OPENROUTER_API_KEYS` with your key(s) for the Nano Banana model.
+    *   Add `XI_TOKEN` with your XI-AI Token for the Nano Banana model.
     *   *Tip: You can add multiple keys separated by commas (e.g., `key1,key2,key3`) for load balancing.*
     *   **Need a key?**
         *   [How to get a ModelScope API key](https://x230rpqk6u.feishu.cn/wiki/AJxKwmleQiUovZkZZOJc4mp4n5g)
-        *   [How to get an OpenRouter API key](https://x230rpqk6u.feishu.cn/wiki/FptCw2H1ViN7QwkhT16cMTDPnCe)
+        *   [How to get a XI Token](https://x230rpqk6u.feishu.cn/wiki/FptCw2H1ViN7QwkhT16cMTDPnCe)
 5.  **Deploy**: Click the "Link" or "Deploy" button. Your AI Image Generation Hub is now live!
 
 ---
@@ -72,7 +72,7 @@ Built with a robust Deno backend, it offers a seamless and professional-grade cr
 -   **Backend**: Deno, Deno Standard Library
 -   **AI Models**:
     *   [ModelScope](https://modelscope.cn/): `Qwen/Qwen-Image`, `MusePublic/FLUX.1`, etc.
-    *   [OpenRouter](https://openrouter.ai/): `google/gemini-2.5-flash-image-preview` (for Nano Banana)
+    *   [XI-AI](https://api.xi-ai.cn/): `google/gemini-2.5-flash-image-preview` (for Nano Banana)
 
 ---
 

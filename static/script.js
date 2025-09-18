@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modelCards = document.querySelectorAll('.model-card');
     const nanobananaControls = document.getElementById('nanobanana-controls');
     const modelscopeControls = document.getElementById('modelscope-controls');
-    const apiKeyOpenRouterInput = document.getElementById('api-key-input-openrouter');
+    const apiKeyXIInput = document.getElementById('api-key-input-openrouter');
     const apiKeyModelScopeInput = document.getElementById('api-key-input-modelscope');
     const generateBtns = document.querySelectorAll('.generate-btn');
 
@@ -70,8 +70,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         setupModalListeners();
         
         fetch('/api/key-status').then(res => res.json()).then(data => {
-            if (data.isSet) { apiKeyOpenRouterInput.parentElement.style.display = 'none'; }
-        }).catch(error => console.error("无法检查 OpenRouter API key 状态:", error));
+            if (data.isSet) { apiKeyXIInput.parentElement.style.display = 'none'; }
+        }).catch(error => console.error("无法检查 XI Token 状态:", error));
 
         fetch('/api/modelscope-key-status').then(res => res.json()).then(data => {
             if (data.isSet) { apiKeyModelScopeInput.parentElement.style.display = 'none'; }
@@ -290,11 +290,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function handleNanoBananaGeneration(statusUpdate) {
-        if (apiKeyOpenRouterInput.parentElement.style.display !== 'none' && !apiKeyOpenRouterInput.value.trim()) { throw new Error('请输入 OpenRouter API 密钥'); }
+        if (apiKeyXIInput.parentElement.style.display !== 'none' && !apiKeyXIInput.value.trim()) { throw new Error('请输入 XI Token'); }
         if (!promptNanoBananaInput.value.trim()) { throw new Error('请输入提示词'); }
         statusUpdate('正在生成图片...');
         const base64Images = await Promise.all(modelStates.nanobanana.inputs.files.map(fileToBase64));
-        const requestBody = { model: 'nanobanana', prompt: modelStates.nanobanana.inputs.prompt, images: base64Images, apikey: apiKeyOpenRouterInput.value };
+        const requestBody = { model: 'nanobanana', prompt: modelStates.nanobanana.inputs.prompt, images: base64Images, apikey: apiKeyXIInput.value };
         const response = await fetch('/generate', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(requestBody) });
         const data = await response.json();
         if (!response.ok || data.error) { throw new Error(data.error || `服务器错误: ${response.status}`); }
@@ -364,17 +364,26 @@ document.addEventListener('DOMContentLoaded', async () => {
     function displayResults(imageUrls) {
         if (!imageUrls || imageUrls.length === 0 || !imageUrls[0]) { updateResultStatus("模型没有返回有效的图片URL。"); return; }
         mainResultImageContainer.innerHTML = ''; resultThumbnailsContainer.innerHTML = '';
+        
+        // 检查是否是base64数据
+        const isBase64 = (url) => typeof url === 'string' && url.startsWith('data:image/');
+        
         const mainImg = document.createElement('img');
         mainImg.src = imageUrls[0];
         mainImg.onclick = () => openModal(mainImg.src);
         mainResultImageContainer.appendChild(mainImg);
+        
         if (imageUrls.length > 1) {
             imageUrls.forEach((url, index) => {
                 const thumbImg = document.createElement('img');
                 thumbImg.src = url;
                 thumbImg.classList.add('result-thumb');
                 if (index === 0) { thumbImg.classList.add('active'); }
-                thumbImg.addEventListener('click', () => { mainImg.src = thumbImg.src; document.querySelectorAll('.result-thumb').forEach(t => t.classList.remove('active')); thumbImg.classList.add('active'); });
+                thumbImg.addEventListener('click', () => { 
+                    mainImg.src = thumbImg.src; 
+                    document.querySelectorAll('.result-thumb').forEach(t => t.classList.remove('active')); 
+                    thumbImg.classList.add('active'); 
+                });
                 resultThumbnailsContainer.appendChild(thumbImg);
             });
         }

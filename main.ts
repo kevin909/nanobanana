@@ -17,20 +17,20 @@ const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 // =======================================================
 // 模块 1: XI-AI API 调用逻辑 (用于 nano banana)
 // =======================================================
-async function callOpenRouter(messages: any[], apiKey: string): Promise<{ type: 'image' | 'text'; content: string }> {
-    if (!apiKey) { throw new Error("callOpenRouter received an empty apiKey."); }
-    const openrouterPayload = { model: "gemini-2.5-flash-image-preview", messages };
-    console.log("Sending payload to OpenRouter:", JSON.stringify(openrouterPayload, null, 2));
+async function callXiAI(messages: any[], apiKey: string): Promise<{ type: 'image' | 'text'; content: string }> {
+    if (!apiKey) { throw new Error("callXiAI received an empty apiKey."); }
+    const xiAIPayload = { model: "gemini-2.5-flash-image-preview", messages };
+    console.log("Sending payload to XI-AI:", JSON.stringify(xiAIPayload, null, 2));
     const apiResponse = await fetch("https://api.xi-ai.cn/v1/chat/completions", {
         method: "POST", headers: { "Authorization": `Bearer ${apiKey}`, "Content-Type": "application/json" },
-        body: JSON.stringify(openrouterPayload)
+        body: JSON.stringify(xiAIPayload)
     });
     if (!apiResponse.ok) {
         const errorBody = await apiResponse.text();
-        throw new Error(`OpenRouter API error: ${apiResponse.status} ${apiResponse.statusText} - ${errorBody}`);
+        throw new Error(`XI-AI API error: ${apiResponse.status} ${apiResponse.statusText} - ${errorBody}`);
     }
     const responseData = await apiResponse.json();
-    console.log("OpenRouter Response:", JSON.stringify(responseData, null, 2));
+    console.log("XI-AI Response:", JSON.stringify(responseData, null, 2));
     const message = responseData.choices?.[0]?.message;
     if (message?.images?.[0]?.image_url?.url) { return { type: 'image', content: message.images[0].image_url.url }; }
     if (typeof message?.content === 'string' && message.content.startsWith('data:image/')) { return { type: 'image', content: message.content }; }
@@ -111,7 +111,7 @@ serve(async (req) => {
     }
 
     if (pathname === "/api/key-status") {
-        const isSet = !!Deno.env.get("OPENROUTER_API_KEY");
+        const isSet = !!Deno.env.get("XI_TOKEN");
         return new Response(JSON.stringify({ isSet }), {
             headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
         });
@@ -131,8 +131,8 @@ serve(async (req) => {
             const { model, apikey, prompt, images, parameters, timeout } = requestData;
 
             if (model === 'nanobanana') {
-                const openrouterApiKey = apikey || Deno.env.get("OPENROUTER_API_KEY");
-                if (!openrouterApiKey) { return createJsonErrorResponse("OpenRouter API key is not set.", 500); }
+                const xiToken = apikey || Deno.env.get("XI_TOKEN");
+                if (!xiToken) { return createJsonErrorResponse("XI Token is not set.", 500); }
                 if (!prompt) { return createJsonErrorResponse("Prompt is required.", 400); }
                 const contentPayload: any[] = [{ type: "text", text: prompt }];
                 if (images && Array.isArray(images) && images.length > 0) {
@@ -140,7 +140,7 @@ serve(async (req) => {
                     contentPayload.push(...imageParts);
                 }
                 const webUiMessages = [{ role: "user", content: contentPayload }];
-                const result = await callOpenRouter(webUiMessages, openrouterApiKey);
+                const result = await callXiAI(webUiMessages, xiToken);
                 if (result.type === 'image') {
                     return new Response(JSON.stringify({ imageUrl: result.content }), { headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" } });
                 } else {
