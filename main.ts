@@ -42,7 +42,14 @@ async function callXiAI(messages: any[], apiKey: string): Promise<{ type: 'image
     }
     
     if (message?.images?.[0]?.image_url?.url) { return { type: 'image', content: message.images[0].image_url.url }; }
-    if (typeof message?.content === 'string' && message.content.startsWith('data:image/')) { return { type: 'image', content: message.content }; }
+    if (typeof message?.content === 'string' && message.content.includes('data:image/')) {
+    // 提取纯base64图片数据，去除可能的文本描述
+    const base64Match = message.content.match(/data:image\/[^;]+;base64,[^\s'"]+/);
+    if (base64Match) {
+        return { type: 'image', content: base64Match[0] };
+    }
+    return { type: 'image', content: message.content };
+}
     if (typeof message?.content === 'string' && message.content.trim() !== '') { return { type: 'text', content: message.content }; }
     return { type: 'text', content: "[模型没有返回有效内容]" };
 }
